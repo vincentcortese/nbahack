@@ -23,22 +23,31 @@ class NeuralNetwork:
     def feedforward(self):
         for i in range(0, len(self.layers)):
             if i == 0:
-                self.layers[i] = self.sigmoid(np.dot(self.input, self.weights[0])[0])
+                tempx = np.dot(self.input, self.weights[0])[0]
+                #print("tempx: " + str(tempx))
+                self.layers[i] = self.sigmoid(tempx)
             else:
-                self.layers[i] = self.sigmoid(np.dot(self.layers[i - 1], self.weights[i])[0])
+                tempx = np.dot(self.layers[i - 1], self.weights[i])[0]
+                #print("tempx for " + str(i) + ": " + str(tempx))
+                self.layers[i] = self.sigmoid(tempx)
+            print("self.layers[" + str(i) + "]: " + str(self.layers[i]))
         self.output = self.layers[len(self.layers) - 1]
+        print("self.output: " + str(self.output))
         return self.output
     def backprop(self):
         for i in range(0, len(self.weights)):
             dweight = np.dot(self.layers[i], (2 * (self.y - self.output) * self.sigmoid_derivative(self.output)))
-            weights += dweight
-        return weights
+            print("dweight: " + str(dweight))
+            self.weights += dweight
+        print("weights: " + str(self.weights))
+        return self.weights
 
-    def sigmoid_derivative(x):
+    def sigmoid_derivative(self, x):
         return x * (1.0 - x)
 
-    def sigmoid(x, derivative=False):
-        sigm = 1.0 / (1.0 + np.exp(-x))
+    def sigmoid(self, x, derivative=False):
+        print("x: " + str(x))
+        sigm = 1.0 / (1.0 + np.exp(x * -1.0))
         return sigm
     def sum(arr):
         output = 0
@@ -46,7 +55,9 @@ class NeuralNetwork:
             output += arr[i]
         return output
 
-nn = NeuralNetwork([1, 1, 1, 1], 4)
+nn = NeuralNetwork([[0.0]], 1, [1])
+nn.feedforward()
+nn.backprop()
 # print(nn.feedforward())
-print(nn.backprop())
+#print(nn.backprop())
 
