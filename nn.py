@@ -55,9 +55,12 @@ class NeuralNetwork:
             output += arr[i]
         return output
 
-nn = NeuralNetwork([[0.0]], 1, [1])
-nn.feedforward()
-nn.backprop()
+nn = NeuralNetwork([[0.0]], 3, [1])
+#nn.feedforward()
+for i in range(0, 100):
+    nn.feedforward()
+    nn.backprop()
+
 # print(nn.feedforward())
 #print(nn.backprop())
 
