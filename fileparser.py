@@ -64,6 +64,8 @@ class FileParser:
 
 #of = open("output.txt", 'w')
 o = FileParser.parseFile("data/business/training_set.csv")
+
+
 #writestring = ""
 #for entry in o[0]:
 #    writestring += str(entry) + '\n'
