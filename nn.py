@@ -7,14 +7,12 @@ class NeuralNetwork:
     biases = []
     y = []
     hiddenlayersize = 4
-    output = []
+    output = 0
     dweights = []
     def __init__(self, inp, layers, training_output):
         self.input = inp
         self.y = training_output
         self.hiddenlayersize = len(inp)
-        for i in range(0, len(self.y)):
-            self.output.append(0)
         for i in range(0, layers):
             self.weights.append(np.random.rand(self.hiddenlayersize, 1))
             self.biases.append(np.random.rand(self.hiddenlayersize, 1))
@@ -32,9 +30,9 @@ class NeuralNetwork:
         return self.output
     def backprop(self):
         for i in range(0, len(self.weights)):
-            dweight = np.dot(self.layers.T,)
-        return 
-        pass
+            dweight = np.dot(self.layers[i], (2 * (self.y - self.output) * self.sigmoid_derivative(self.output)))
+            weights += dweight
+        return weights
 
     def sigmoid_derivative(x):
         return x * (1.0 - x)
@@ -48,7 +46,7 @@ class NeuralNetwork:
             output += arr[i]
         return output
 
-nn = NeuralNetwork([1, 1, 1, 1], 4, [0, 0, 0, 0])
+nn = NeuralNetwork([1, 1, 1, 1], 4)
 # print(nn.feedforward())
 print(nn.backprop())
 
