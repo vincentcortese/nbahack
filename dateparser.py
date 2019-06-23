@@ -21,7 +21,3 @@ class DateParser:
         return return_time
     def getDateTime(datestring):
         return DateParser.getDate(datestring) + DateParser.getTime(datestring)
-
-print(DateParser.getDate("2017-10-03 22:20:37 EDT"))
-print(DateParser.getTime("2017-10-03 22:20:37 EDT"))
-print(DateParser.getDateTime("2017-10-03 22:20:37 EDT"))
