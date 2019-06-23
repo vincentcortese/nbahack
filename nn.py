@@ -7,6 +7,7 @@ class NeuralNetwork:
     biases = []
     hiddenlayersize = 4
     output = 0
+    dweights = 0
     def __init__(self, inp, layers):
         self.input = inp
         self.hiddenlayersize = len(inp)
@@ -23,9 +24,20 @@ class NeuralNetwork:
                 self.layers[i] = self.sigmoid(np.dot(self.input, self.weights[0])[0])
             else:
                 self.layers[i] = self.sigmoid(np.dot(self.layers[i - 1], self.weights[i])[0])
-        return self.layers[len(self.layers) - 1]
-    def sigmoid(self, x):
-        return 1.0/(1 + math.exp(x * -1.0))
+        self.output = self.layers[len(self.layers) - 1]
+        return self.output
+    def backprop(self):
+        for i in range(0, len(self.weights)):
+            dweight = np.dot(self.layers.T,)
+        return 
+        pass
+
+    def sigmoid_derivative(x):
+        return x * (1.0 - x)
+
+    def sigmoid(x, derivative=False):
+        sigm = 1. / (1. + np.exp(-x))
+        return sigm
     def sum(arr):
         output = 0
         for i in range(0, len(arr)):
@@ -33,5 +45,6 @@ class NeuralNetwork:
         return output
 
 nn = NeuralNetwork([1, 1, 1, 1], 4)
-print(nn.feedforward())
+# print(nn.feedforward())
+print(nn.backprop())
 
