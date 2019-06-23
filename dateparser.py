@@ -1,5 +1,3 @@
-#2017-10-03 22:20:37 EDT
-
 class DateParser:
     def __init__(self):
         pass
