@@ -7,12 +7,14 @@ class NeuralNetwork:
     biases = []
     y = []
     hiddenlayersize = 4
-    output = 0
+    output = []
     dweights = []
     def __init__(self, inp, layers, training_output):
         self.input = inp
         self.y = training_output
         self.hiddenlayersize = len(inp)
+        for i in range(0, len(self.y)):
+            self.output.append(0)
         for i in range(0, layers):
             self.weights.append(np.random.rand(self.hiddenlayersize, 1))
             self.biases.append(np.random.rand(self.hiddenlayersize, 1))
@@ -46,7 +48,7 @@ class NeuralNetwork:
             output += arr[i]
         return output
 
-nn = NeuralNetwork([1, 1, 1, 1], 4)
+nn = NeuralNetwork([1, 1, 1, 1], 4, [0, 0, 0, 0])
 # print(nn.feedforward())
 print(nn.backprop())
 
