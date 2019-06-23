@@ -32,7 +32,7 @@ class NeuralNetwork:
         self.weights1 += d_weights1
         self.weights2 += d_weights2
         print("self.weights1: " + str(self.weights1))
-        print("self.weights1: " + str(self.weights2))
+        print("self.weights2: " + str(self.weights2))
 
 
 if __name__ == "__main__":
