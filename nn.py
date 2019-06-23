@@ -5,11 +5,13 @@ class NeuralNetwork:
     weights = []
     layers = []
     biases = []
+    y = []
     hiddenlayersize = 4
     output = 0
-    dweights = 0
-    def __init__(self, inp, layers):
+    dweights = []
+    def __init__(self, inp, layers, training_output):
         self.input = inp
+        self.y = training_output
         self.hiddenlayersize = len(inp)
         for i in range(0, layers):
             self.weights.append(np.random.rand(self.hiddenlayersize, 1))
@@ -36,7 +38,7 @@ class NeuralNetwork:
         return x * (1.0 - x)
 
     def sigmoid(x, derivative=False):
-        sigm = 1. / (1. + np.exp(-x))
+        sigm = 1.0 / (1.0 + np.exp(-x))
         return sigm
     def sum(arr):
         output = 0
