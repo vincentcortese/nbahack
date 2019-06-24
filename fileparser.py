@@ -63,7 +63,7 @@ class FileParser:
         return output
 
 #of = open("output.txt", 'w')
-o = FileParser.parseFile("data/business/training_set.csv")
+#o = FileParser.parseFile("data/business/training_set.csv")
 
 
 #writestring = ""
