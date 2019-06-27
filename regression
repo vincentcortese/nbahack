@@ -1,0 +1,186 @@
+install.packages("lubridate")
+library(lubridate)
+
+# NBA Business problem 
+
+setwd("C:/Users/Vincent/Documents/0 - Stevens/random")
+
+nba <- read.csv("training_set.csv")
+
+# This is the range of engagements we are dealing with
+max(nba[,1])
+min(nba[,1])
+
+nba <- data.frame(nba)
+
+# Counts characters in the Description category
+nchar(as.character(nba$Description[1]))
+
+# ==================================== FUNCTION ========================
+
+# This loop adds the Caption length from the Description
+nba$Caption.length <- NA
+for(i in 1:length(nba[,1])){
+  nba$Caption.length[i] <- nchar(as.character(nba$Description[i]))
+  
+}
+
+# Now have to adjust the times based on this 
+# https://blog.hubspot.com/marketing/instagram-best-time-post
+
+# This finds the day of the week given the time
+nba$Day <- NA
+for(i in 1:length(nba[,1])){
+  nba$Day[i] <- weekdays(strptime(nba$Created[i], format = "%Y-%m-%d %H:%M:%S", tz = "America/New_York"))
+}
+
+
+# Assigns numbers for each day of the week. 1 is Sunday, 7 is Saturday
+nba$Day.num <- NA
+for(i in 1:length(nba[,1])){
+  nba$Day.num[i] <- wday(nba$Created[i])
+}
+
+# This quantifies the category of post
+nba$Type.num <- NA
+for(i in 1:length(nba[,1])){
+  if(nba$Type[i] == "Video")(nba$Type.num[i] = 1)
+  if(nba$Type[i] == "Photo")(nba$Type.num[i] = 2)
+  if(nba$Type[i] == "Album")(nba$Type.num[i] = 3)
+}
+
+# summary(lm(nba$Engagements ~ nba$Followers.at.Posting + nba$Caption.length + nba$Day.num + nba$Type.num))
+
+# TO DO: Quantify time of day when it is posted, create groups for morning, afternoon, night,
+# late night. 
+
+# Times of the day
+time.list <- c("Late Night", "Early Morning", "Late Morning", "Early Afternoon", "Late Afternoon", "Early Evening",
+               "Late Evening", "Night")
+
+# Used arbitrary times when each period ends. So the first one is Night, which ends at 12 am
+time.vec <- c("00:00:00", "04:00:00", "08:00:00", "12:00:00", "15:00:00", "17:00:00", "19:00:00", "22:00:00")
+# length(time.vec)
+
+# Assigning each post a qualitative time of day it was posted based on above categories. 
+nba$TimeofDay <- NA
+for(i in 1:length(nba[,1])){
+  x <- format(strptime(nba$Created[i], format = "%Y-%m-%d %H:%M:%S", tz = "America/New_York"), "%H:%M:%S")
+  if(x < time.vec[2]){
+    (nba$TimeofDay[i] = time.list[1])
+  } else if(x < time.vec[3]){
+    (nba$TimeofDay[i] = time.list[2])
+  } else if(x < time.vec[4]){
+    (nba$TimeofDay[i] = time.list[3])
+  } else if(x < time.vec[5]){
+    (nba$TimeofDay[i] = time.list[4])
+  } else if(x < time.vec[6]){
+    (nba$TimeofDay[i] = time.list[5])
+  } else if(x < time.vec[7]){
+    (nba$TimeofDay[i] = time.list[6])
+  }else if(x < time.vec[8]){
+    (nba$TimeofDay[i] = time.list[7])
+  }else{
+    (nba$TimeofDay[i] = time.list[8])
+  }
+}
+
+nba$TimeNum <- NA
+for(i in 1:length(nba[,1])){
+  x <- match(nba$TimeofDay[i], time.list)
+  nba$TimeNum[i] <- x
+}
+
+summary(lm(nba$Engagements ~ nba$Followers.at.Posting + nba$Caption.length + nba$Day.num + nba$Type.num + nba$TimeNum))
+
+nba.sub <- nba[c(-3,-4,-5,-7,-10)]
+
+nba.regress <- lm(nba.sub)
+
+summary(nba.regress)
+
+
+
+
+# ============================ PREDICTION ============================================
+
+nba.pred <- read.csv("holdout_set.csv")
+
+
+# This loop adds the Caption length from the Description
+nba.pred$Caption.length <- NA
+for(i in 1:length(nba.pred[,1])){
+  nba.pred$Caption.length[i] <- nchar(as.character(nba.pred$Description[i]))
+  
+}
+
+# This finds the day of the week given the time
+nba.pred$Day <- NA
+for(i in 1:length(nba.pred[,1])){
+  nba.pred$Day[i] <- weekdays(strptime(nba.pred$Created[i], format = "%Y-%m-%d %H:%M:%S", tz = "America/New_York"))
+}
+
+
+# Assigns numbers for each day of the week. 1 is Sunday, 7 is Saturday
+nba.pred$Day.num <- NA
+for(i in 1:length(nba.pred[,1])){
+  nba.pred$Day.num[i] <- wday(nba.pred$Created[i])
+}
+
+# This quantifies the category of post
+nba.pred$Type.num <- NA
+for(i in 1:length(nba.pred[,1])){
+  if(nba.pred$Type[i] == "Video")(nba.pred$Type.num[i] = 1)
+  if(nba.pred$Type[i] == "Photo")(nba.pred$Type.num[i] = 2)
+  if(nba.pred$Type[i] == "Album")(nba.pred$Type.num[i] = 3)
+}
+
+# Times of the day
+time.list <- c("Late Night", "Early Morning", "Late Morning", "Early Afternoon", "Late Afternoon", "Early Evening",
+               "Late Evening", "Night")
+
+# Used arbitrary times when each period ends. So the first one is Night, which ends at 12 am
+time.vec <- c("00:00:00", "04:00:00", "08:00:00", "12:00:00", "15:00:00", "17:00:00", "19:00:00", "22:00:00")
+# length(time.vec)
+
+# Assigning each post a qualitative time of day it was posted based on above categories. 
+nba.pred$TimeofDay <- NA
+for(i in 1:length(nba.pred[,1])){
+  x <- format(strptime(nba.pred$Created[i], format = "%Y-%m-%d %H:%M:%S", tz = "America/New_York"), "%H:%M:%S")
+  if(x < time.vec[2]){
+    (nba.pred$TimeofDay[i] = time.list[1])
+  } else if(x < time.vec[3]){
+    (nba.pred$TimeofDay[i] = time.list[2])
+  } else if(x < time.vec[4]){
+    (nba.pred$TimeofDay[i] = time.list[3])
+  } else if(x < time.vec[5]){
+    (nba.pred$TimeofDay[i] = time.list[4])
+  } else if(x < time.vec[6]){
+    (nba.pred$TimeofDay[i] = time.list[5])
+  } else if(x < time.vec[7]){
+    (nba.pred$TimeofDay[i] = time.list[6])
+  }else if(x < time.vec[8]){
+    (nba.pred$TimeofDay[i] = time.list[7])
+  }else{
+    (nba.pred$TimeofDay[i] = time.list[8])
+  }
+}
+
+nba.pred$TimeNum <- NA
+for(i in 1:length(nba.pred[,1])){
+  x <- match(nba.pred$TimeofDay[i], time.list)
+  nba.pred$TimeNum[i] <- x
+}
+
+nba.pred.sub <- nba.pred[c(-3,-4,-5,-7,-10)]
+
+
+predicted <- predict(nba.regress, nba.pred.sub)
+
+nba.pred.sub$Engagements <- predicted
+
+summary(nba.pred.sub$Engagements)
+summary(nba$Engagements)
+
+write.csv(nba.pred.sub, file = "holdout_set_Cortese.csv")
+
